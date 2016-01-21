@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity {
     ListView listView;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +43,15 @@ public class MainActivity extends Activity {
         // Assign adapter to ListView
         listView.setAdapter(adapter);
 
-        Intent intent = new Intent(this, SampleActivity.class);
-        startActivity(intent);
-
+        intent = new Intent(this, SampleActivity.class);
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
+                startActivity(intent);
             }
         });
     }
