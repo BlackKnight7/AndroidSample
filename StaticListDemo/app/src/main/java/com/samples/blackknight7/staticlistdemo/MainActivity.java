@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
     Intent intent;
     MyAdapter adapter;
     ArrayList<MyItem> items;
+    Boolean isRefresh = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                startActivity(intent);
+                if(!isRefresh){
+                    startActivity(intent);
+                }
             }
         });
 
@@ -53,14 +56,16 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
 
     @Override
     public void onDownPullRefresh() {
-        new AsyncTask<Void, Void, Void>() {
+        isRefresh = true;
 
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 SystemClock.sleep(2000);
                 for (int i = 0; i < 2; i++) {
                     items.add(new MyItem("Test Title0", "Fish0", "This is one test", new Date()));
                 }
+                isRefresh = false;
                 return null;
             }
 
@@ -74,8 +79,9 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
 
     @Override
     public void onLoadingMore() {
-        new AsyncTask<Void, Void, Void>() {
+        isRefresh = true;
 
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 SystemClock.sleep(5000);
@@ -83,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
                 items.add(new MyItem("Test Title4", "Fish4", "This is one test", new Date()));
                 items.add(new MyItem("Test Title5", "Fish5", "This is one test", new Date()));
                 items.add(new MyItem("Test Title6", "Fish6", "This is one test", new Date()));
+
+                isRefresh = false;
                 return null;
             }
 
