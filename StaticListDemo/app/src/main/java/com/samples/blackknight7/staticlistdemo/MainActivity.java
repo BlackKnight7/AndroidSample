@@ -41,16 +41,16 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         intent = new Intent(this, SampleActivity.class);
 
         // ListView Item Click Listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                if(!isRefresh){
-                    startActivity(intent);
-                }
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//                if(!isRefresh){
+//                    startActivity(intent);
+//                }
+//            }
+//        });
 
     }
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                SystemClock.sleep(2000);
+                SystemClock.sleep(4000);
                 for (int i = 0; i < 2; i++) {
                     items.add(new MyItem("Test Title0", "Fish0", "This is one test", new Date()));
                 }

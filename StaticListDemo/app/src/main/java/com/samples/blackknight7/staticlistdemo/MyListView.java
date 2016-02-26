@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,9 +34,12 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
 
     private Animation upAnimation; // 向上旋转的动画
     private Animation downAnimation; // 向下旋转的动画
+    private AnimationSet loadingAnimation;
 
-    private ImageView ivArrow; // 头布局的剪头
-    private ProgressBar mProgressBar; // 头布局的进度条
+    //    private ImageView ivArrow; // 头布局的剪头
+//    private ProgressBar mProgressBar; // 头布局的进度条
+    private View loadingView;
+
     private TextView tvState; // 头布局的状态
     private TextView tvLastUpdateTime; // 头布局的最后更新时间
 
@@ -68,10 +73,12 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
      */
     private void initHeaderView() {
         headerView = View.inflate(getContext(), R.layout.listview_header, null);
-        ivArrow = (ImageView) headerView
-                .findViewById(R.id.iv_listview_header_arrow);
-        mProgressBar = (ProgressBar) headerView
-                .findViewById(R.id.pb_listview_header);
+//        ivArrow = (ImageView) headerView
+//                .findViewById(R.id.iv_listview_header_arrow);
+//        mProgressBar = (ProgressBar) headerView
+//                .findViewById(R.id.pb_listview_header);
+        loadingView = headerView.findViewById(R.id.loading_view);
+
         tvState = (TextView) headerView
                 .findViewById(R.id.tv_listview_header_state);
         tvLastUpdateTime = (TextView) headerView
@@ -101,20 +108,34 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     private void initAnimation() {
         upAnimation = new RotateAnimation(0f, -180f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         upAnimation.setDuration(500);
-        upAnimation.setFillAfter(true); // ¶¯»­½áÊøºó, Í£ÁôÔÚ½áÊøµÄÎ»ÖÃÉÏ
+        upAnimation.setFillAfter(true);
 
         downAnimation = new RotateAnimation(-180f, -360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         downAnimation.setDuration(500);
-        downAnimation.setFillAfter(true); // ¶¯»­½áÊøºó, Í£ÁôÔÚ½áÊøµÄÎ»ÖÃÉÏ
+        downAnimation.setFillAfter(true);
+
+        loadingAnimation = new AnimationSet(true);
+
+        ScaleAnimation loadingAnimation1 = new ScaleAnimation(0.5f, 1.0f, 1.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        loadingAnimation1.setDuration(500);
+
+        ScaleAnimation loadingAnimation2 = new ScaleAnimation(1.0f, 0.5f, 1.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        loadingAnimation2.setDuration(500);
+        loadingAnimation2.setStartOffset(500);
+
+        loadingAnimation.addAnimation(loadingAnimation1);
+        loadingAnimation.addAnimation(loadingAnimation2);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN :
+            case MotionEvent.ACTION_DOWN:
                 downY = (int) ev.getY();
                 break;
-            case MotionEvent.ACTION_MOVE :
+            case MotionEvent.ACTION_MOVE:
                 int moveY = (int) ev.getY();
                 // 移动中的y - 按下的y = 间距.
                 int diff = (moveY - downY) / 2;
@@ -138,7 +159,7 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                     return true;
                 }
                 break;
-            case MotionEvent.ACTION_UP :
+            case MotionEvent.ACTION_UP:
                 // 判断当前的状态是松开刷新还是下拉刷新
                 if (currentState == RELEASE_REFRESH) {
                     Log.i(TAG, "刷新数据.");
@@ -156,7 +177,7 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                     headerView.setPadding(0, -headerViewHeight, 0, 0);
                 }
                 break;
-            default :
+            default:
                 break;
         }
         return super.onTouchEvent(ev);
@@ -167,21 +188,22 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
      */
     private void refreshHeaderView() {
         switch (currentState) {
-            case DOWN_PULL_REFRESH : // 下拉刷新状态
+            case DOWN_PULL_REFRESH: // 下拉刷新状态
                 tvState.setText("下拉刷新");
-                ivArrow.startAnimation(downAnimation); // 执行向下旋转
+//                ivArrow.startAnimation(downAnimation); // 执行向下旋转
                 break;
-            case RELEASE_REFRESH : // 松开刷新状态
+            case RELEASE_REFRESH: // 松开刷新状态
                 tvState.setText("松开刷新");
-                ivArrow.startAnimation(upAnimation); // 执行向上旋转
+//                ivArrow.startAnimation(upAnimation); // 执行向上旋转
                 break;
-            case REFRESHING : // 正在刷新中状态
-                ivArrow.clearAnimation();
-                ivArrow.setVisibility(View.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
+            case REFRESHING: // 正在刷新中状态
+//                ivArrow.clearAnimation();
+//                ivArrow.setVisibility(View.GONE);
+//                mProgressBar.setVisibility(View.VISIBLE);
+                loadingView.startAnimation(loadingAnimation);
                 tvState.setText("正在刷新中...");
                 break;
-            default :
+            default:
                 break;
         }
     }
@@ -213,12 +235,9 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     /**
      * 当滚动时调用
      *
-     * @param firstVisibleItem
-     *            当前屏幕显示在顶部的item的position
-     * @param visibleItemCount
-     *            当前屏幕显示了多少个条目的总数
-     * @param totalItemCount
-     *            ListView的总条目的总数
+     * @param firstVisibleItem 当前屏幕显示在顶部的item的position
+     * @param visibleItemCount 当前屏幕显示了多少个条目的总数
+     * @param totalItemCount   ListView的总条目的总数
      */
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
@@ -246,8 +265,8 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
      */
     public void hideHeaderView() {
         headerView.setPadding(0, -headerViewHeight, 0, 0);
-        ivArrow.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+//        ivArrow.setVisibility(View.VISIBLE);
+//        mProgressBar.setVisibility(View.GONE);
         tvState.setText("下拉刷新");
         tvLastUpdateTime.setText("最后刷新时间: " + getLastUpdateTime());
         currentState = DOWN_PULL_REFRESH;

@@ -2,29 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dip" >
+    <!--<FrameLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="10dip" >-->
 
-        <ImageView
-            android:id="@+id/iv_listview_header_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minWidth="30dip"
-            android:src="@drawable/arrow_up" />
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_listview_header_arrow"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:minWidth="30dip"-->
+            <!--android:src="@drawable/arrow_up" />-->
 
-        <ProgressBar
-            android:id="@+id/pb_listview_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/progressbar"
-            android:visibility="gone" />
-    </FrameLayout>
+        <!--<ProgressBar-->
+            <!--android:id="@+id/pb_listview_header"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:indeterminateDrawable="@drawable/progressbar"-->
+            <!--android:visibility="gone" />-->
+    <!--</FrameLayout>-->
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -50,5 +50,10 @@
             android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <View android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@android:color/holo_red_light"/>
 
 </LinearLayout>
