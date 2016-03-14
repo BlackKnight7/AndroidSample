@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -142,14 +143,12 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                 // -头布局的高度 + 间距 = paddingTop
                 int paddingTop = -headerViewHeight + diff;
                 // 如果: -头布局的高度 > paddingTop的值 执行super.onTouchEvent(ev);
-                if (firstVisibleItemPosition == 0
-                        && -headerViewHeight < paddingTop) {
+                if (firstVisibleItemPosition == 0 && -headerViewHeight < paddingTop) {
                     if (paddingTop > 0 && currentState == DOWN_PULL_REFRESH) { // 完全显示了.
                         Log.i(TAG, "松开刷新");
                         currentState = RELEASE_REFRESH;
                         refreshHeaderView();
-                    } else if (paddingTop < 0
-                            && currentState == RELEASE_REFRESH) { // 没有显示完全
+                    } else if (paddingTop < 0 && currentState == RELEASE_REFRESH) { // 没有显示完全
                         Log.i(TAG, "下拉刷新");
                         currentState = DOWN_PULL_REFRESH;
                         refreshHeaderView();
@@ -215,8 +214,7 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        if (scrollState == SCROLL_STATE_IDLE
-                || scrollState == SCROLL_STATE_FLING) {
+        if (scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_FLING) {
             // 判断当前是否已经到了底部
             if (isScrollToBottom && !isLoadingMore) {
                 isLoadingMore = true;
@@ -230,6 +228,32 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                 }
             }
         }
+
+        if (scrollState == SCROLL_STATE_IDLE) {
+            if (!isScrollToBottom && !isLoadingMore) {
+                // 滑动停止时触发
+                int first = getFirstVisiblePosition();
+                int last = getLastVisiblePosition();
+                Log.i("Item first:", String.valueOf(first));
+                Log.i("Item last：", String.valueOf(last));
+
+                for(int index = first; index<last; index++){
+                    int childIndex = index - first;
+                    View visibleView = getChildAt(childIndex);
+                    refreshCellDynamicStatus(visibleView);
+                }
+            }
+        }
+    }
+
+    private void refreshCellDynamicStatus(View lyricCell){
+        View view = lyricCell.findViewById(R.id.create_date);
+
+        TranslateAnimation animation = new TranslateAnimation(0, 10, view.getY(), view.getY());
+        animation.setDuration(1000);
+
+        view.startAnimation(animation);
+
     }
 
     /**

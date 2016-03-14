@@ -32,6 +32,18 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         items = new ArrayList<>();
         items.add(new MyItem("Test Title1", "Fish1", "This is one test", new Date()));
         items.add(new MyItem("Test Title2", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title3", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title4", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title5", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title6", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title7", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title8", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title9", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title10", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title11", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title12", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title13", "Fish2", "This is one test", new Date()));
+        items.add(new MyItem("Test Title14", "Fish2", "This is one test", new Date()));
         adapter = new MyAdapter(this, items);
 
         // Assign adapter to ListView
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnRefreshListener
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                SystemClock.sleep(5000);
+                SystemClock.sleep(1000);
 
                 items.add(new MyItem("Test Title4", "Fish4", "This is one test", new Date()));
                 items.add(new MyItem("Test Title5", "Fish5", "This is one test", new Date()));
