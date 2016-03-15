@@ -1,6 +1,7 @@
 package com.samples.blackknight7.staticlistdemo;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -249,8 +250,9 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     private void refreshCellDynamicStatus(View lyricCell){
         View view = lyricCell.findViewById(R.id.create_date);
 
-        TranslateAnimation animation = new TranslateAnimation(0, 10, view.getY(), view.getY());
-        animation.setDuration(1000);
+        TranslateAnimation animation = new TranslateAnimation(view.getWidth(), 0, 0, 0);
+        animation.setStartOffset(1000);
+        animation.setDuration(400);
 
         view.startAnimation(animation);
 
